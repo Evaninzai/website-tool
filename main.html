@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern System Homepage</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #4a4a4a;
+            margin-bottom: 30px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        nav ul li {
+            margin: 0 10px;
+        }
+
+        nav ul li a {
+            color: #5c6bc0;
+            text-decoration: none;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav ul li a:hover {
+            color: #3f51b5;
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: #3f51b5;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        nav ul li a:hover::after {
+            transform: scaleX(1);
+        }
+
+        .content {
+            margin-top: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            cursor: pointer;
+            background-color: #5c6bc0;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: #3f51b5;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        }
+
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.5s ease-in forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container fade-in">
+        <h1>Welcome to Our Modern System</h1>
+        <nav>
+            <ul>
+                <li><a href="translate.html" id="translateLink"><i class="fas fa-language"></i> Translate</a></li>
+                <li><a href="transcribe.html" id="transcribeLink"><i class="fas fa-microphone"></i> Transcribe</a></li>
+            </ul>
+        </nav>
+        <div class="content" id="mainContent">
+            <p>Select an option from the menu to get started.</p>
+            <a href="#" class="btn" id="ctaButton">Get Started</a>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const links = document.querySelectorAll('nav ul li a');
+            const ctaButton = document.getElementById('ctaButton');
+
+            links.forEach(link => {
+                link.addEventListener('mouseover', () => {
+                    gsap.to(link, {duration: 0.3, scale: 1.1, ease: 'power2.out'});
+                });
+                link.addEventListener('mouseout', () => {
+                    gsap.to(link, {duration: 0.3, scale: 1, ease: 'power2.out'});
+                });
+            });
+
+            ctaButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                gsap.to(ctaButton, {duration: 0.1, scale: 0.95, yoyo: true, repeat: 1});
+            });
+
+            // Initial animations
+            gsap.from('.container', {duration: 1, y: 50, opacity: 0, ease: 'power3.out'});
+        });
+    </script>
+</body>
+</html>

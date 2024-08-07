@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arabic to English Translator</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h2 {
+            color: #4a4a4a;
+            margin-bottom: 30px;
+        }
+
+        textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            resize: vertical;
+        }
+
+        button {
+            display: inline-block;
+            padding: 12px 20px;
+            cursor: pointer;
+            background-color: #5c6bc0;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;
+            margin: 10px 5px;
+        }
+
+        button:hover {
+            background-color: #3f51b5;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        }
+
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.5s ease-in forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container fade-in">
+        <h2>Arabic to English Translator</h2>
+        <textarea id="inputText" rows="5" placeholder="Enter Arabic text here"></textarea>
+        <button id="translateButton">
+            <i class="fas fa-language"></i> Translate
+        </button>
+        <textarea id="outputText" rows="5" placeholder="English translation will appear here" readonly></textarea>
+        <div>
+            <button id="backButton">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </button>
+            <button id="copyButton">
+                <i class="fas fa-copy"></i> Copy Translation
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
+    <script>
+        const inputText = document.getElementById('inputText');
+        const outputText = document.getElementById('outputText');
+        const translateButton = document.getElementById('translateButton');
+        const backButton = document.getElementById('backButton');
+        const copyButton = document.getElementById('copyButton');
+
+        translateButton.addEventListener('click', () => {
+            const arabicText = inputText.value;
+            if (!arabicText) {
+                alert('Please enter some Arabic text to translate.');
+                return;
+            }
+
+            translateButton.innerHTML = '<span class="loading"></span>Translating...';
+            translateButton.disabled = true;
+
+            fetch('http://localhost:5000/translate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ text: arabicText }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                outputText.value = data.translation;
+                gsap.from(outputText, {duration: 0.5, opacity: 0, y: 20});
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                outputText.value = 'An error occurred during translation.';
+            })
+            .finally(() => {
+                translateButton.innerHTML = '<i class="fas fa-language"></i> Translate';
+                translateButton.disabled = false;
+            });
+        });
+
+        backButton.addEventListener('click', () => {
+            window.location.href = 'main.html';
+        });
+
+        copyButton.addEventListener('click', () => {
+            outputText.select();
+            document.execCommand('copy');
+            alert('Translation copied to clipboard!');
+        });
+
+        // Initial animations
+        gsap.from('.container', {duration: 1, y: 50, opacity: 0, ease: 'power3.out'});
+    </script>
+</body>
+</html>
